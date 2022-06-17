@@ -2,7 +2,7 @@ import './View.scss';
 import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Table, Icon, Row, Col, Tooltip, message } from 'antd';
+import { Table, Button, Icon, Row, Col, Tooltip, message } from 'antd';
 import { Link } from 'react-router-dom';
 import AceEditor from 'client/components/AceEditor/AceEditor';
 import { formatTime, safeArray } from '../../../../common.js';
@@ -11,6 +11,7 @@ import variable from '../../../../constants/variable';
 import constants from '../../../../constants/variable.js';
 import copy from 'copy-to-clipboard';
 import SchemaTable from '../../../../components/SchemaTable/SchemaTable.js';
+import MonacoEditor, { drawerTools } from '../../../../components/MonacoEditor/index.js';
 
 const HTTP_METHOD = constants.HTTP_METHOD;
 
@@ -35,6 +36,10 @@ class View extends Component {
     custom_field: PropTypes.object
   };
 
+  codeView(codeType) {
+    drawerTools.open(codeType, { language: codeType === 'model' ? 'typescript':codeType });
+  }
+
   req_body_form(req_body_type, req_body_form) {
     if (req_body_type === 'form') {
       const columns = [
@@ -53,11 +58,12 @@ class View extends Component {
             text = text || '';
             return text.toLowerCase() === 'text' ? (
               <span>
-                <i className="query-icon text">T</i>文本
+                <i className='query-icon text'>T</i>文本
               </span>
             ) : (
               <span>
-                <Icon type="file" className="query-icon" />文件
+                <Icon type='file' className='query-icon' />
+                文件
               </span>
             );
           }
@@ -102,10 +108,10 @@ class View extends Component {
       }
 
       return (
-        <div style={{ display: dataSource.length ? '' : 'none' }} className="colBody">
+        <div style={{ display: dataSource.length ? '' : 'none' }} className='colBody'>
           <Table
             bordered
-            size="small"
+            size='small'
             pagination={false}
             columns={columns}
             dataSource={dataSource}
@@ -120,7 +126,7 @@ class View extends Component {
         return <SchemaTable dataSource={res_body} />;
       } else {
         return (
-          <div className="colBody">
+          <div className='colBody'>
             {/* <div id="vres_body_json" style={{ minHeight: h * 16 + 100 }}></div> */}
             <AceEditor data={res_body} readOnly={true} style={{ minHeight: 600 }} />
           </div>
@@ -128,8 +134,8 @@ class View extends Component {
       }
     } else if (res_body_type === 'raw') {
       return (
-        <div className="colBody">
-          <AceEditor data={res_body} readOnly={true} mode="text" style={{ minHeight: 300 }} />
+        <div className='colBody'>
+          <AceEditor data={res_body} readOnly={true} mode='text' style={{ minHeight: 300 }} />
         </div>
       );
     }
@@ -141,7 +147,7 @@ class View extends Component {
         return <SchemaTable dataSource={req_body_other} />;
       } else {
         return (
-          <div className="colBody">
+          <div className='colBody'>
             <AceEditor
               data={req_body_other}
               readOnly={true}
@@ -201,7 +207,7 @@ class View extends Component {
     }
 
     return (
-      <Table bordered size="small" pagination={false} columns={columns} dataSource={dataSource} />
+      <Table bordered size='small' pagination={false} columns={columns} dataSource={dataSource} />
     );
   }
 
@@ -375,98 +381,97 @@ class View extends Component {
     const { tag, up_time, title, uid, username } = this.props.curData;
 
     let res = (
-      <div className="caseContainer">
-        <h2 className="interface-title" style={{ marginTop: 0 }}>
+      <div className='caseContainer'>
+        <h2 className='interface-title' style={{ marginTop: 0 }}>
           基本信息
         </h2>
-        <div className="panel-view">
-          <Row className="row">
-            <Col span={4} className="colKey">
+        <div className='panel-view'>
+          <Row className='row'>
+            <Col span={4} className='colKey'>
               接口名称：
             </Col>
-            <Col span={8} className="colName">
+            <Col span={8} className='colName'>
               <span title={title}>{title}</span>
             </Col>
-            <Col span={4} className="colKey">
+            <Col span={4} className='colKey'>
               创&ensp;建&ensp;人：
             </Col>
-            <Col span={8} className="colValue">
-              <Link className="user-name" to={'/user/profile/' + uid}>
-                <img src={'/api/user/avatar?uid=' + uid} className="user-img" />
+            <Col span={8} className='colValue'>
+              <Link className='user-name' to={'/user/profile/' + uid}>
+                <img src={'/api/user/avatar?uid=' + uid} className='user-img' />
                 {username}
               </Link>
             </Col>
           </Row>
-          <Row className="row">
-            <Col span={4} className="colKey">
+          <Row className='row'>
+            <Col span={4} className='colKey'>
               状&emsp;&emsp;态：
             </Col>
             <Col span={8} className={'tag-status ' + this.props.curData.status}>
               {status[this.props.curData.status]}
             </Col>
-            <Col span={4} className="colKey">
+            <Col span={4} className='colKey'>
               更新时间：
             </Col>
             <Col span={8}>{formatTime(up_time)}</Col>
           </Row>
-          {safeArray(tag) &&
-            safeArray(tag).length > 0 && (
-              <Row className="row remark">
-                <Col span={4} className="colKey">
-                  Tag ：
-                </Col>
-                <Col span={18} className="colValue">
-                  {tag.join(' , ')}
-                </Col>
-              </Row>
-            )}
-          <Row className="row">
-            <Col span={4} className="colKey">
+          {safeArray(tag) && safeArray(tag).length > 0 && (
+            <Row className='row remark'>
+              <Col span={4} className='colKey'>
+                Tag ：
+              </Col>
+              <Col span={18} className='colValue'>
+                {tag.join(' , ')}
+              </Col>
+            </Row>
+          )}
+          <Row className='row'>
+            <Col span={4} className='colKey'>
               接口路径：
             </Col>
             <Col
               span={18}
-              className="colValue"
+              className='colValue'
               onMouseEnter={this.enterItem}
               onMouseLeave={this.leaveItem}
             >
               <span
                 style={{ color: methodColor.color, backgroundColor: methodColor.bac }}
-                className="colValue tag-method"
+                className='colValue tag-method'
               >
                 {this.props.curData.method}
               </span>
-              <span className="colValue">
+              <span className='colValue'>
                 {this.props.currProject.basepath}
                 {this.props.curData.path}
               </span>
-              <Tooltip title="复制路径">
+              <Tooltip title='复制路径'>
                 <Icon
-                  type="copy"
-                  className="interface-url-icon"
-                  onClick={() => this.copyUrl(this.props.currProject.basepath + this.props.curData.path)}
+                  type='copy'
+                  className='interface-url-icon'
+                  onClick={() =>
+                    this.copyUrl(this.props.currProject.basepath + this.props.curData.path)
+                  }
                   style={{ display: this.state.enter ? 'inline-block' : 'none' }}
                 />
               </Tooltip>
             </Col>
           </Row>
-          <Row className="row">
-            <Col span={4} className="colKey">
+          <Row className='row'>
+            <Col span={4} className='colKey'>
               Mock地址：
             </Col>
-            <Col span={18} className="colValue">
+            <Col span={18} className='colValue'>
               {this.flagMsg(this.props.currProject.is_mock_open, this.props.currProject.strice)}
               <span
-                className="href"
+                className='href'
                 onClick={() =>
                   window.open(
                     location.protocol +
                       '//' +
                       location.hostname +
                       (location.port !== '' ? ':' + location.port : '') +
-                      `/mock/${this.props.currProject._id}${this.props.currProject.basepath}${
-                        this.props.curData.path
-                      }`,
+                      `/mock/${this.props.currProject._id}${this.props.currProject.basepath}${this.props.curData.path}`,
                     '_blank'
                   )
                 }
@@ -475,41 +480,60 @@ class View extends Component {
                   '//' +
                   location.hostname +
                   (location.port !== '' ? ':' + location.port : '') +
-                  `/mock/${this.props.currProject._id}${this.props.currProject.basepath}${
-                    this.props.curData.path
-                  }`}
+                  `/mock/${this.props.currProject._id}${this.props.currProject.basepath}${this.props.curData.path}`}
               </span>
             </Col>
           </Row>
-          {this.props.curData.custom_field_value &&
-            this.props.custom_field.enable && (
-              <Row className="row remark">
-                <Col span={4} className="colKey">
-                  {this.props.custom_field.name}：
-                </Col>
-                <Col span={18} className="colValue">
-                  {this.props.curData.custom_field_value}
-                </Col>
-              </Row>
-            )}
+          <Row className='row'>
+            <Col span={4} className='colKey'>
+              代码生成
+            </Col>
+            <Col span={18} className='colValue'>
+              <Button
+                style={{ marginRight: '12px' }}
+                size='small'
+                type='primary'
+                onClick={() => this.codeView('javascript')}
+              >
+                javascript
+              </Button>
+              <Button style={{ marginRight: '12px' }} size='small' type='primary'   onClick={() => this.codeView('model')}>
+                model
+              </Button>
+              <Button size='small' type='primary'  onClick={() => this.codeView('typescript')}>
+                typescript
+              </Button>
+              <MonacoEditor></MonacoEditor>
+            </Col>
+          </Row>
+          {this.props.curData.custom_field_value && this.props.custom_field.enable && (
+            <Row className='row remark'>
+              <Col span={4} className='colKey'>
+                {this.props.custom_field.name}：
+              </Col>
+              <Col span={18} className='colValue'>
+                {this.props.curData.custom_field_value}
+              </Col>
+            </Row>
+          )}
         </div>
-        {this.props.curData.desc && <h2 className="interface-title">备注</h2>}
+        {this.props.curData.desc && <h2 className='interface-title'>备注</h2>}
         {this.props.curData.desc && (
           <div
-            className="tui-editor-contents"
+            className='tui-editor-contents'
             style={{ margin: '0px', padding: '0px 20px', float: 'none' }}
             dangerouslySetInnerHTML={{ __html: this.props.curData.desc }}
           />
         )}
-        <h2 className="interface-title" style={{ display: requestShow ? '' : 'none' }}>
+        <h2 className='interface-title' style={{ display: requestShow ? '' : 'none' }}>
           请求参数
         </h2>
         {req_dataSource.length ? (
-          <div className="colHeader">
-            <h3 className="col-title">路径参数：</h3>
+          <div className='colHeader'>
+            <h3 className='col-title'>路径参数：</h3>
             <Table
               bordered
-              size="small"
+              size='small'
               pagination={false}
               columns={req_params_columns}
               dataSource={req_dataSource}
@@ -519,11 +543,11 @@ class View extends Component {
           ''
         )}
         {dataSource.length ? (
-          <div className="colHeader">
-            <h3 className="col-title">Headers：</h3>
+          <div className='colHeader'>
+            <h3 className='col-title'>Headers：</h3>
             <Table
               bordered
-              size="small"
+              size='small'
               pagination={false}
               columns={columns}
               dataSource={dataSource}
@@ -533,8 +557,8 @@ class View extends Component {
           ''
         )}
         {this.props.curData.req_query && this.props.curData.req_query.length ? (
-          <div className="colQuery">
-            <h3 className="col-title">Query：</h3>
+          <div className='colQuery'>
+            <h3 className='col-title'>Query：</h3>
             {this.req_query(this.props.curData.req_query)}
           </div>
         ) : (
@@ -550,7 +574,7 @@ class View extends Component {
                 : 'none'
           }}
         >
-          <h3 style={{ display: bodyShow ? '' : 'none' }} className="col-title">
+          <h3 style={{ display: bodyShow ? '' : 'none' }} className='col-title'>
             Body:
           </h3>
           {this.props.curData.req_body_type === 'form'
@@ -562,7 +586,7 @@ class View extends Component {
               )}
         </div>
 
-        <h2 className="interface-title">返回数据</h2>
+        <h2 className='interface-title'>返回数据</h2>
         {this.res_body(
           this.props.curData.res_body_type,
           this.props.curData.res_body,
@@ -575,7 +599,7 @@ class View extends Component {
       if (this.state.init) {
         res = <div />;
       } else {
-        res = <ErrMsg type="noData" />;
+        res = <ErrMsg type='noData' />;
       }
     }
     return res;
