@@ -60,7 +60,7 @@ function connect(callback) {
 
   db.then(
     function() {
-      yapi.commons.log('mongodb load success...');
+      yapi.commons.log('mongodb load success...', mongoose.connection.db);
 
       if (typeof callback === 'function') {
         callback.call(db);
@@ -81,3 +81,4 @@ module.exports = {
   model: model,
   connect: connect
 };
+

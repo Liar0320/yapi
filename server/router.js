@@ -11,6 +11,7 @@ const logController = require('./controllers/log.js');
 const followController = require('./controllers/follow.js');
 const openController = require('./controllers/open.js');
 const { createAction } = require('./utils/commons.js');
+const interfaceCodegenController = require('./controllers/interfaceCodeGen.js');
 
 const router = koaRouter();
 
@@ -18,6 +19,10 @@ let INTERFACE_CONFIG = {
   interface: {
     prefix: '/interface/',
     controller: interfaceController
+  },
+  interfaceCodegen: {
+    prefix: '/interfaceCodegen/',
+    controller: interfaceCodegenController
   },
   user: {
     prefix: '/user/',
@@ -578,6 +583,18 @@ let routerConfig = {
       path: 'import_data',
       method: 'post'
     }
+  ],
+  interfaceCodegen:[
+    {
+      action: 'create',
+      path: 'create',
+      method: 'post'
+    },
+    {
+      action: 'detail',
+      path: 'detail',
+      method: 'get'
+    }, 
   ]
 };
 
