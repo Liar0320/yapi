@@ -4,14 +4,14 @@ var CompressionPlugin = require('compression-webpack-plugin');
 var commonLib = require('./common/plugin.js');
 var assetsPluginInstance = new AssetsPlugin({
   filename: 'static/prd/assets.js',
-  processOutput: function(assets) {
+  processOutput: function (assets) {
     return 'window.WEBPACK_ASSETS = ' + JSON.stringify(assets);
   }
 });
 var fs = require('fs');
 var package = require('./package.json');
 var yapi = require('./server/yapi');
-var isWin = require('os').platform() === 'win32'
+var isWin = require('os').platform() === 'win32';
 
 var compressPlugin = new CompressionPlugin({
   asset: '[path].gz[query]',
@@ -24,13 +24,9 @@ var compressPlugin = new CompressionPlugin({
 function createScript(plugin, pathAlias) {
   let options = plugin.options ? JSON.stringify(plugin.options) : null;
   if (pathAlias === 'node_modules') {
-    return `"${plugin.name}" : {module: require('yapi-plugin-${
-      plugin.name
-    }/client.js'),options: ${options}}`;
+    return `"${plugin.name}" : {module: require('yapi-plugin-${plugin.name}/client.js'),options: ${options}}`;
   }
-  return `"${plugin.name}" : {module: require('${pathAlias}/yapi-plugin-${
-    plugin.name
-  }/client.js'),options: ${options}}`;
+  return `"${plugin.name}" : {module: require('${pathAlias}/yapi-plugin-${plugin.name}/client.js'),options: ${options}}`;
 }
 
 function initPlugins(configPlugin) {
@@ -65,7 +61,7 @@ module.exports = {
     {
       name: 'antd',
       options: {
-        modifyQuery: function(defaultQuery) {
+        modifyQuery: function (defaultQuery) {
           // 可查看和编辑 defaultQuery
           defaultQuery.plugins = [];
           defaultQuery.plugins.push([
@@ -79,12 +75,14 @@ module.exports = {
           defaultQuery.plugins.push(['import', { libraryName: 'antd' }]);
           return defaultQuery;
         },
-        exclude: isWin ? /(tui-editor|node_modules\\(?!_?(yapi-plugin|json-schema-editor-visual)))/ : /(tui-editor|node_modules\/(?!_?(yapi-plugin|json-schema-editor-visual)))/
+        exclude: isWin
+          ? /(tui-editor|node_modules\\(?!_?(yapi-plugin|json-schema-editor-visual)))/
+          : /(tui-editor|node_modules\/(?!_?(yapi-plugin|json-schema-editor-visual)))/
       }
     }
   ],
   devtool: 'cheap-source-map',
-  config: function(ykit) {
+  config: function (ykit) {
     return {
       exports: ['./index.js'],
       commonsChunk: {
@@ -108,7 +106,7 @@ module.exports = {
           lib3: ['mockjs', 'moment', 'recharts']
         }
       },
-      modifyWebpackConfig: function(baseConfig) {
+      modifyWebpackConfig: function (baseConfig) {
         var ENV_PARAMS = {};
         switch (this.env) {
           case 'local':
@@ -166,6 +164,42 @@ module.exports = {
             name: ['[path][name].[ext]?[sha256#base64:8]']
           }
         });
+
+        //  let happypackLoader = baseConfig.module.loaders.find(loader=>loader.loader === 'happypack/loader')
+        //   happypackLoader.exclude = /(tui-editor|node_modules\\\\(?!_?(yapi-plugin|@monaco-editor\/react|json-schema-editor-visual)))/
+        //   console.log("🚀 -> file: ykit.config.js -> line 171 -> baseConfig.module.loaders", baseConfig.module.loaders)
+
+        // @doramart 只是添加了这里的一个配置
+        baseConfig.module.preLoaders.push({
+          test: /\.(js|jsx)$/,
+          include: [
+            path.resolve(__dirname, './node_modules/swagger-client'),
+          ],
+          loader: 'babel-loader',
+          options: {
+            babelrc: false,
+            plugins: [['transform-object-rest-spread', { useBuiltIns: true }]]
+          }
+        });
+
+        // baseConfig.module.loaders.push({
+        //   test: /node_modules\\@monaco-editor\\react/, // /@monaco-editor\/react.m?js$/,
+        //   // test: /@monaco-editor\/react.m?js$/,
+        //   // exclude: {
+        //   //   test: /(node_modules)/, // Exclude libraries in node_modules ...
+        //   //   not: [/@monaco-editor\/react/]
+        //   // },
+        //   loader: require.resolve('babel-loader'),
+        //   options: {
+        //     babelrc: false,
+        //     plugins: [
+        //       [
+        //         require.resolve('babel-plugin-transform-object-rest-spread'),
+        //         { useBuiltIns: true }
+        //       ]
+        //     ]
+        //   }
+        // });
 
         baseConfig.module.loaders.push({
           test: /\.(sass|scss)$/,
