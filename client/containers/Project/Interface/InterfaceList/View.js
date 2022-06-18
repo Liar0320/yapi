@@ -12,16 +12,21 @@ import constants from '../../../../constants/variable.js';
 import copy from 'copy-to-clipboard';
 import SchemaTable from '../../../../components/SchemaTable/SchemaTable.js';
 import MonacoEditor, { drawerTools } from '../../../../components/MonacoEditor/index.js';
-
+import { fetchInterfaceCodegenData } from '../../../../reducer/modules/interface';
 const HTTP_METHOD = constants.HTTP_METHOD;
 
-@connect(state => {
-  return {
-    curData: state.inter.curdata,
-    custom_field: state.group.field,
-    currProject: state.project.currProject
-  };
-})
+@connect(
+  state => {
+    return {
+      curData: state.inter.curdata,
+      custom_field: state.group.field,
+      currProject: state.project.currProject
+    };
+  },
+  {
+    fetchInterfaceCodegenData
+  }
+)
 class View extends Component {
   constructor(props) {
     super(props);
@@ -33,11 +38,29 @@ class View extends Component {
   static propTypes = {
     curData: PropTypes.object,
     currProject: PropTypes.object,
-    custom_field: PropTypes.object
+    custom_field: PropTypes.object,
+    fetchInterfaceCodegenData: PropTypes.func
   };
 
-  codeView(codeType) {
-    drawerTools.open(codeType, { language: codeType === 'model' ? 'typescript':codeType });
+  async codeView(codeType) {
+    console.log('🚀 -> file: View.js -> line 43 -> View -> codeView -> codeType', codeType);
+    let result = await this.props.fetchInterfaceCodegenData(this.props.curData._id);
+    let [jsModel, tsModel] = result.payload.data.data;
+    console.log("🚀 -> file: View.js -> line 49 -> View -> codeView -> jsModel, tsModel", jsModel, tsModel)
+    let jsContent = '';
+    switch (codeType) {
+      case 'javascript':
+        jsContent = jsModel;
+        break;
+      case 'typescript':
+        jsContent = tsModel;
+        break;
+      default:
+        break;
+    }
+    console.log("🚀 -> file: View.js -> line 57 -> View -> codeView -> jsContent", jsContent)
+
+    drawerTools.open(jsContent.join('\n'), { language: codeType === 'model' ? 'typescript' : codeType });
   }
 
   req_body_form(req_body_type, req_body_form) {
@@ -497,10 +520,15 @@ class View extends Component {
               >
                 javascript
               </Button>
-              <Button style={{ marginRight: '12px' }} size='small' type='primary'   onClick={() => this.codeView('model')}>
+              <Button
+                style={{ marginRight: '12px' }}
+                size='small'
+                type='primary'
+                onClick={() => this.codeView('model')}
+              >
                 model
               </Button>
-              <Button size='small' type='primary'  onClick={() => this.codeView('typescript')}>
+              <Button size='small' type='primary' onClick={() => this.codeView('typescript')}>
                 typescript
               </Button>
               <MonacoEditor></MonacoEditor>

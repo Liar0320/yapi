@@ -77,6 +77,7 @@
     "nodemailer": "4.0.1",
     "os": "0.1.1",
     "qs": "^6.7.0",
+    "quicktype-core": "^6.0.71",
     "request": "2.81.0",
     "safeify": "^5.0.5",
     "sha.js": "2.4.9",

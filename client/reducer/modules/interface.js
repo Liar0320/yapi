@@ -13,7 +13,7 @@ const SAVE_IMPORT_DATA = 'yapi/interface/SAVE_IMPORT_DATA';
 const FETCH_INTERFACE_CAT_LIST = 'yapi/interface/FETCH_INTERFACE_CAT_LIST';
 // const SAVE_INTERFACE_PROJECT_ID = 'yapi/interface/SAVE_INTERFACE_PROJECT_ID';
 // const GET_INTERFACE_GROUP_LIST = 'yapi/interface/GET_INTERFACE_GROUP_LIST';
-
+const FETCH_INTERFACE_CODEGEN_DATA = 'yapi/interface/FETCH_INTERFACE_CODEGEN_DATA';
 // Reducer
 const initialState = {
   curdata: {},
@@ -125,6 +125,15 @@ export async function fetchInterfaceData(interfaceId) {
     payload: result
   };
 }
+
+export async function fetchInterfaceCodegenData(interfaceId) {
+  let result = await axios.get('/api/interfaceCodegen/detail?id=' + interfaceId);
+  return {
+    type: FETCH_INTERFACE_CODEGEN_DATA,
+    payload: result
+  };
+}
+
 
 export async function fetchInterfaceListMenu(projectId) {
   let result = await axios.get('/api/interface/list_menu?project_id=' + projectId);
