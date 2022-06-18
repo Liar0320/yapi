@@ -59,7 +59,7 @@ class Codegen {
                 for (var target_1 = __asyncValues(target), target_1_1; target_1_1 = yield target_1.next(), !target_1_1.done;) {
                     const helper = target_1_1.value;
                     // const requests = from === "request" ? proejct : proejct.getRequests();
-                    result.push(yield require("./" + helper).default(source.getRequests(), config));
+                    result.push(yield this.getRunModule(helper)(source.getRequests(), config));
                 }
             }
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -94,9 +94,11 @@ class Codegen {
         });
     }
     static getRunModule(moduleName) {
-        console.log("🚀 -> file: fourier-generate.js -> line 98 -> Codegen -> getRunModule -> path.resolve(__dirname, moduleName)", require(path.resolve(__dirname, moduleName)))
-
-        return require(path.resolve(__dirname, moduleName));
+        const moduleInstance = require(path.resolve(__dirname, moduleName));
+        /**解决在cjs下直接导入 */
+        return moduleInstance instanceof Function
+            ? moduleInstance
+            : moduleInstance.default;
     }
 }
 

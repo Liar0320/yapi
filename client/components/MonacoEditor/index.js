@@ -25,6 +25,9 @@ export default function EditorDrawer() {
     }
     drawerTools.open = (content, _opts = {}) => {
       console.log('here is the monaco instance:', monaco);
+      if(_opts.language){
+        _opts.defaultLanguage = _opts.language;
+      }
       setValue(content);
       setOpts(Object.assign({}, defaultOpts, _opts));
       toggle(true);
@@ -47,7 +50,7 @@ export default function EditorDrawer() {
       onClose={() => toggle(false)}
       width={500}
     >
-      <Editor className='dsa' height='100vh' value={value} {...opts} />
+      <Editor height='100vh' value={value} {...opts} />
     </Drawer>
   );
 }
