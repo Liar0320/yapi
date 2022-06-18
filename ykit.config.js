@@ -174,12 +174,47 @@ module.exports = {
           test: /\.(js|jsx)$/,
           include: [
             path.resolve(__dirname, './node_modules/swagger-client'),
+            path.resolve(__dirname, './node_modules/@monaco-editor')
           ],
           loader: 'babel-loader',
-          options: {
+          query: {
             babelrc: false,
-            plugins: [['transform-object-rest-spread', { useBuiltIns: true }]]
+            presets: [
+              [
+                'es2015',
+                {
+                  loose: true,
+                  modules: 'commonjs'
+                }
+              ],
+              'es2017',
+              'stage-0',
+              'react'
+            ],
+            plugins: [
+              'transform-runtime',
+              [
+                'webpack-alias',
+                {
+                  config: 'webpack.alias.js'
+                }
+              ],
+              'transform-object-rest-spread'
+            ]
           }
+          // query:{
+          //   presets: ['env'],
+          //   plugins: ['transform-runtime']
+          // }
+          // use: [
+          //   {
+          //     loader: 'babel-loader',
+          //     options: {
+          //       babelrc: false,
+          //       plugins: [['transform-object-rest-spread', { useBuiltIns: true }]]
+          //     }
+          //   }
+          // ]
         });
 
         // baseConfig.module.loaders.push({
