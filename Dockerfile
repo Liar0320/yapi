@@ -15,46 +15,20 @@
 FROM node:14-alpine as base
 
 # 设置环境变量
-ENV NODE_ENV=production \
-    APP_PATH=/node/app
-
-# 将镜像源替换为阿里云
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+ENV APP_PATH=/node/app
 
 # 设置工作目录
 WORKDIR $APP_PATH/core
-
-# # 安装 nodejs 和 yarn        
-# # 包源 https://pkgs.alpinelinux.org/packages
-# RUN apk add --no-cache nodejs yarn
-
-# 解决确实 python环境 from https://github.com/nodejs/docker-node/issues/384#issuecomment-748778725
-RUN apk --no-cache add --virtual native-deps \
-    g++ gcc libgcc libstdc++ linux-headers make python2 && \
-    npm install --quiet node-gyp -g
-
-
-############ 打包编译环境
-# 使用基础镜像装依赖阶段
-FROM base AS install
 
 # 拷贝 package.json  yarn.lock  到工作跟目录下
 ADD package.json .npmrc yarn.lock $APP_PATH/core/
 
 # 安装打包环境依赖
-RUN yarn install --production=false
+RUN yarn install --production=true
 
 # 将工作目录下的文件添加到打包环境中
 ADD . $APP_PATH/core/
 
-CMD echo $APP_PATH
+EXPOSE 3000
 
-
-# 执行打包
-RUN yarn run build-client
-
-# 切换第三方包 为 生产环境
-RUN yarn install --production=true --force
-
-# 直接运行 不进行 文件体积 缩小
-RUN yarn run start
+ENTRYPOINT ["node"]
