@@ -31,7 +31,6 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@monaco-editor/react": "^4.4.5",
     "ajv": "^5.5.1",
     "ajv-i18n": "^2.2.0",
     "axios": "0.18.1",
@@ -91,6 +90,7 @@
     "cross-env": "^7.0.3"
   },
   "devDependencies": {
+    "@monaco-editor/react": "^4.4.5",
     "antd": "3.26.19",
     "anujs": "^1.2.6",
     "assets-webpack-plugin": "^3.5.1",
