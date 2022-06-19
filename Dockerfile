@@ -11,8 +11,8 @@
 #          在yarn 安装第三包是 会产生缓存文件， 加大了 镜像的体积
 
 ########### 基础环境
-#构建基础镜像
-FROM alpine:3.14 AS base
+# 指定 node 版本号，满足宿主环境
+FROM node:16-alpine as base
 
 # 设置环境变量
 ENV NODE_ENV=production \
@@ -21,9 +21,9 @@ ENV NODE_ENV=production \
 # 设置工作目录
 WORKDIR $APP_PATH
 
-# 安装 nodejs 和 yarn        
-# 包源 https://pkgs.alpinelinux.org/packages
-RUN apk add --no-cache nodejs yarn
+# # 安装 nodejs 和 yarn        
+# # 包源 https://pkgs.alpinelinux.org/packages
+# RUN apk add --no-cache nodejs yarn
 
 
 
