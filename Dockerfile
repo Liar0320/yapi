@@ -1,4 +1,6 @@
 FROM node:16-alpine as builder
+# 将镜像源替换为阿里云
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 WORKDIR /yapi
 RUN apk add --no-cache wget python make
 
