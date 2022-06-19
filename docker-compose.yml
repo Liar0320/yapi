@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile
     image: test:yapi
     volumes:
-      - /root/lich/docker/yapi/config.json:$APP_PATH/config.json
+      - /root/lich/docker/yapi/config.json:node/app/config.json
     ports:
       - "3000:3000"
 

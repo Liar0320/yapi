@@ -22,7 +22,7 @@ ENV NODE_ENV=production \
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 # 设置工作目录
-WORKDIR $APP_PATH
+WORKDIR $APP_PATH/core
 
 # # 安装 nodejs 和 yarn        
 # # 包源 https://pkgs.alpinelinux.org/packages
@@ -46,6 +46,9 @@ RUN yarn install --production=false
 
 # 将工作目录下的文件添加到打包环境中
 ADD . $APP_PATH/core/
+
+CMD echo $APP_PATH
+
 
 # 执行打包
 RUN yarn run build-client
