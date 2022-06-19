@@ -32,7 +32,7 @@ WORKDIR $APP_PATH
 FROM base AS install
 
 # 拷贝 package.json  yarn.lock  到工作跟目录下
-ADD package.json yarn.lock $APP_PATH
+ADD package.json .npmrc yarn.lock $APP_PATH/
 
 # 安装打包环境依赖
 RUN yarn install --production=false
