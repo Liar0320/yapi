@@ -12,11 +12,14 @@
 
 ########### 基础环境
 # 指定 node 版本号，满足宿主环境
-FROM node:16-alpine as base
+FROM node:14-alpine as base
 
 # 设置环境变量
 ENV NODE_ENV=production \
     APP_PATH=/node/app
+
+# 将镜像源替换为阿里云
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 # 设置工作目录
 WORKDIR $APP_PATH
