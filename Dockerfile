@@ -39,13 +39,13 @@ RUN apk --no-cache add --virtual native-deps \
 FROM base AS install
 
 # 拷贝 package.json  yarn.lock  到工作跟目录下
-ADD package.json .npmrc yarn.lock $APP_PATH/
+ADD package.json .npmrc yarn.lock $APP_PATH/core/
 
 # 安装打包环境依赖
 RUN yarn install --production=false
 
 # 将工作目录下的文件添加到打包环境中
-ADD . $APP_PATH
+ADD . $APP_PATH/core/
 
 # 执行打包
 RUN yarn run build-client

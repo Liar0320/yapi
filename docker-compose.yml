@@ -1,0 +1,32 @@
+# version: "3"
+# services:
+#   nginx:
+#     container_name: mynginx
+#     image: nginx:test-v1
+#     ports:
+#       - 80:5180
+#     volumes:
+#       - ./nginx-vol/html:/data/web/html
+#       - ./nginx-vol/logs:/var/log/nginx
+#       - ./nginx-vol/conf.d:/etc/nginx/conf.d
+#     restart: always
+
+
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: test:yapi
+    volumes:
+      - /root/lich/docker/yapi/config.json:$APP_PATH/config.json
+    ports:
+      - "3000:3000"
+
+# runnder in powershell
+# __________________start
+# docker run -dp 7001:80 `
+# -v "$(pwd)/conf/conf.d:/etc/nginx/conf.d" `
+# oa:v2
+# __________________end
