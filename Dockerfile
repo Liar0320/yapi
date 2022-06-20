@@ -14,8 +14,6 @@
 # 指定 node 版本号，满足宿主环境
 FROM node:14-alpine as base
 
-
-
 # 设置环境变量
 ENV NODE_ENV=production \
     APP_PATH=/yapi
@@ -36,7 +34,6 @@ RUN apk --no-cache add --virtual native-deps \
     g++ gcc libgcc libstdc++ linux-headers make python2 && \
     npm install --quiet node-gyp -g
 
-
 ############ 打包编译环境
 # 使用基础镜像装依赖阶段
 FROM base AS builder
@@ -50,24 +47,38 @@ RUN cd $APP_PATH/core && yarn install --production=false
 # 将工作目录下的文件添加到打包环境中
 ADD . $APP_PATH/core
 
+RUN cp $APP_PATH/core/config_example.json $APP_PATH/config.json
+# # COPY $APP_PATH/core/config_example.json $APP_PATH/config.json
+
 # 执行打包
 RUN cd $APP_PATH/core && yarn run build-client
 
-############ 生产环境
-# 使用基础镜像作为生产环境
-FROM base AS prod
-
-# 将构建产物移至 nginx 中
-COPY --from=builder $APP_PATH/core $APP_PATH/core
-
+# 重新安装 生产环境的包
 RUN cd $APP_PATH/core && rm -rf node_modules && yarn install --production=true
+
+# ############ 生产环境
+# 使用基础镜像作为生产环境
+FROM node:14-alpine AS prod
+
+# 设置环境变量
+ENV NODE_ENV=production \
+    APP_PATH=/yapi
+
+# 设置工作目录
+WORKDIR $APP_PATH
+
+# 将构建产物移至 nginx 中cd 
+COPY --from=builder $APP_PATH/core $APP_PATH/core
 
 COPY --from=builder $APP_PATH/core/config_example.json $APP_PATH/config.json
 
+EXPOSE 3000
+
+ENTRYPOINT ["node"]
 
 
-# # 切换第三方包 为 生产环境
-# RUN yarn install --production=true --force
+# # # 切换第三方包 为 生产环境
+# # RUN yarn install --production=true --force
 
-# # 直接运行 不进行 文件体积 缩小
-# RUN yarn run start
+# # # 直接运行 不进行 文件体积 缩小
+# # RUN yarn run start

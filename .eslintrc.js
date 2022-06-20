@@ -25,7 +25,8 @@ module.exports = {
         "no-console": ["off"],
         "import/no-unresolved": ["off"],
         "react/no-find-dom-node": ["off"],
-        "no-empty": ["off"]
+        "no-empty": ["off"],
+        "react/no-deprecated":["off"]
         // "react/no-unescaped-entities": 0
     }
 };
