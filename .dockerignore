@@ -1,0 +1,24 @@
+# vendors modules file
+
+node_modules
+
+# github
+
+.github
+.git
+
+# project doc
+
+docs
+
+# build files
+
+static
+
+# test files
+
+test
+
+# docker nginx conf
+
+conf

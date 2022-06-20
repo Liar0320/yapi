@@ -11,7 +11,7 @@ const logController = require('./controllers/log.js');
 const followController = require('./controllers/follow.js');
 const openController = require('./controllers/open.js');
 const { createAction } = require('./utils/commons.js');
-const interfaceCodegenController = require('./controllers/interfaceCodeGen.js');
+const interfaceCodegenController = require('./controllers/interfaceCodegen.js');
 
 const router = koaRouter();
 
