@@ -84,6 +84,8 @@ ENTRYPOINT ["node"]
 
 # docker run -p 9038:3000 -it -v D:/lich/windows.code/yapi-1/config.json:/yapi/config.json yapi:1.0 server/app.js
 
+#  docker run -d  --name yapi-codegen   --link mongo-yapi:mongo   --workdir /yapi/core   -p 3000:3000   -v /root/lich/docker/yapi/config.json:/yapi/config.json   yapi:1.0   server/app.js
+
 # docker run -it  --name yapi-codegen  \
 #                 --link mongo-yapi:mongo \
 #                 --workdir /yapi/core  \
