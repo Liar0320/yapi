@@ -65,7 +65,7 @@ ENV NODE_ENV=production \
     APP_PATH=/yapi
 
 # 设置工作目录
-WORKDIR $APP_PATH
+WORKDIR $APP_PATH/core
 
 # 将构建产物移至 nginx 中cd 
 COPY --from=builder $APP_PATH/core $APP_PATH/core
