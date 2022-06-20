@@ -12,7 +12,7 @@ docker-deploy:
     - lich-test-runner
   only: 
 # 只用在dev分支才会执行
-    main
+    - main
 
 
 # stages:
