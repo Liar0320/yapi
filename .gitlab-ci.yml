@@ -1,0 +1,35 @@
+stages:
+  - deploy
+
+docker-deploy:
+  stage: deploy
+# 执行job内容
+  script: 
+    - docker build -t yapi-codegen .
+    - if [ $(docker ps -aq --filter name=yapi-codegen) ]; then docker rm -rf yapi-codegen;fi
+    - docker run -d  --name yapi-codegen   --link mongo-yapi:mongo   --workdir /yapi/core   -p 3000:3000   -v /root/lich/docker/yapi/config.json:/yapi/config.json   yapi:1.0   server/app.js
+  tags: 
+    - lich-test-runner
+  only: 
+# 只用在dev分支才会执行
+    main
+
+
+# stages:
+#   - deploy
+
+# docker-deploy:
+#   stage: deploy
+# # 执行job内容
+#   script: deploy
+# # 通过Dockerfile生成cicd-demo镜像
+#     - docker build -t gitlab-docker-cicd .
+# # 删除已经在运行的容器
+#     - if [ $(docker ps -aq --filter name= gitlab-docker-cicd) ]; then docker rm -rf gitlab-docker-cicd;fi
+# # 通过镜像启动容器，并把本机8001端口映射到容器8001端口
+#     - docker run -d -p 8001:8001 --name gitlab-docker-cicd gitlab-docker-cicd
+#   tags: 
+#     lich-docker-runner
+# #   only: 
+# # # 只用在dev分支才会执行
+# #     dev
