@@ -7,7 +7,7 @@ docker-deploy:
   script: 
     - docker build -t yapi-codegen .
     - if [ $(docker ps -aq --filter name=yapi-codegen) ]; then docker rm -f yapi-codegen;fi
-    - docker run -d  --name yapi-codegen   --link mongo-yapi:mongo   --workdir /yapi/core   -p 9042:3000   -v /root/lich/docker/yapi/config.json:/yapi/config.json   yapi-codegen   server/app.js
+    - docker run -d  --name yapi-codegen   --link mongo-yapi:mongo   --workdir /yapi/core   -p 9042:3000   -v /home/lich/docker/yapi/config.json:/yapi/config.json   yapi-codegen   server/app.js
   tags: 
     - 200-gitlab-runner
   only: 
