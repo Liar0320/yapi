@@ -1,6 +1,10 @@
 import { Drawer } from 'antd';
 import React, { useEffect, useState } from 'react';
-import Editor, { useMonaco } from '@monaco-editor/react';
+import Editor, { useMonaco,loader } from '@monaco-editor/react';
+
+// loader.config({ paths:{vs:"https://cdn.bootcdn.net/ajax/libs/monaco-editor/0.33.0/min/vs"}});
+loader.config({paths:{vs:"http://192.168.1.200:9110/monaco-editor/min/vs"}})
+// loader.config({monaco})
 // console.log("🚀 -> file: index.js -> line 4 -> Editor", Editor)
 
 export const drawerTools = {
@@ -48,7 +52,7 @@ export default function EditorDrawer() {
       closable={false}
       visible={visible}
       onClose={() => toggle(false)}
-      width={500}
+      width={'800px'}
     >
       <Editor height='100vh' value={value} {...opts} />
     </Drawer>
