@@ -30,9 +30,9 @@ WORKDIR $APP_PATH
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 # 解决确实 python环境 from https://github.com/nodejs/docker-node/issues/384#issuecomment-748778725
-RUN apk --no-cache add --virtual native-deps \
-    g++ gcc libgcc libstdc++ linux-headers make python2 && \
-    npm install --quiet node-gyp -g
+#RUN apk --no-cache add --virtual native-deps \
+#    g++ gcc libgcc libstdc++ linux-headers make python2 && \
+#    npm install --quiet node-gyp -g
 
 ############ 打包编译环境
 # 使用基础镜像装依赖阶段
